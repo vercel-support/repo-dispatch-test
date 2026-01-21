@@ -4,7 +4,6 @@ on:
   repository_dispatch:
     types:
       - 'vercel.deployment.pending'
-      - 'vercel.deployment.ready'
 
 jobs:
   print:
