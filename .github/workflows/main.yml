@@ -3,7 +3,7 @@ name: Print Vercel Events
 on:
   repository_dispatch:
     types:
-      - 'vercel.deployment.pending'
+      - 'vercel.deployment.*'
 
 jobs:
   print:
