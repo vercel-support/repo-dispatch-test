@@ -1,0 +1,17 @@
+name: Print Vercel Events
+
+on:
+  repository_dispatch:
+    types:
+      - 'vercel.deployment.ready'
+      - 'vercel.deployment.promoted'
+
+
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print event details
+        run: |
+          echo "Event type: ${{ github.event.action }}"
+          echo "Deployment URL: ${{ github.event.client_payload.url }}"
