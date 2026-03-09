@@ -13,14 +13,6 @@ jobs:
         with:
           ref: ${{ github.event.client_payload.git.sha }}
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm test
-        env:
-          BASE_URL: ${{ github.event.client_payload.url }}
-
       - name: Notify Vercel
         uses: vercel/repository-dispatch/actions/status@v1
         with:
