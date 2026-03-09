@@ -4,8 +4,6 @@ on:
   repository_dispatch:
     types:
       - 'vercel.deployment.ready'
-      - 'vercel.deployment.promoted'
-
 
 jobs:
   print:
