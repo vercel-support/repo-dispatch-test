@@ -1,17 +1,27 @@
-name: Print Vercel Events
+name: Test Checks
 
 on:
   repository_dispatch:
     types:
-      - 'vercel.deployment.ready'
-      - 'vercel.deployment.promoted'
-
+      - vercel.deployment.success
 
 jobs:
-  print:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Print event details
-        run: |
-          echo "Event type: ${{ github.event.action }}"
-          echo "Deployment URL: ${{ github.event.client_payload.url }}"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.git.sha }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+        env:
+          BASE_URL: ${{ github.event.client_payload.url }}
+
+      - name: Notify Vercel
+        uses: vercel/repository-dispatch/actions/status@v1
+        with:
+          name: 'Vercel - Test Checks'
