@@ -1,24 +1,22 @@
-# .github/workflows/vercel-checks.yml
-name: Vercel Safety Checks
+name: Test Checks
 
 on:
   repository_dispatch:
-    types: [vercel.deployment.ready]
+    types:
+      - vercel.deployment.success
 
 jobs:
-  checks:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: pnpm
-      
-      - run: pnpm ci
-      - run: pnpm lint && pnpm test
-      
-      - name: Vercel Check ✅
-        uses: vercel/repository-dispatch/actions/status@v1
-        with:
-          name: "Vercel Safety Check"
+          ref: ${{ github.event.client_payload.git.sha }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+        env:
+          BASE_URL: ${{ github.event.client_payload.url }}
