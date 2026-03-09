@@ -20,3 +20,8 @@ jobs:
         run: npm test
         env:
           BASE_URL: ${{ github.event.client_payload.url }}
+
+      - name: Notify Vercel
+        uses: vercel/repository-dispatch/actions/status@v1
+        with:
+          name: 'Vercel - Test Checks'
