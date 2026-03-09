@@ -1,15 +1,24 @@
-name: Print Vercel Events
+# .github/workflows/vercel-checks.yml
+name: Vercel Safety Checks
 
 on:
   repository_dispatch:
-    types:
-      - 'vercel.deployment.ready'
+    types: [vercel.deployment.ready]
 
 jobs:
-  print:
+  checks:
     runs-on: ubuntu-latest
     steps:
-      - name: Print event details
-        run: |
-          echo "Event type: ${{ github.event.action }}"
-          echo "Deployment URL: ${{ github.event.client_payload.url }}"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      
+      - run: pnpm ci
+      - run: pnpm lint && pnpm test
+      
+      - name: Vercel Check ✅
+        uses: vercel/repository-dispatch/actions/status@v1
+        with:
+          name: "Vercel Safety Check"
